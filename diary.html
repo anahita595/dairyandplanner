@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Diary</title>
+  <link rel="stylesheet" href="diary.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Write in Your Diary</h1>
+    <textarea id="diaryEntry" placeholder="Write your thoughts here..."></textarea>
+    <div class="buttons">
+      <button onclick="saveEntry()">💾 Save</button>
+      <button onclick="clearEntry()">🗑 Clear</button>
+      <a href="view.html" class="btn-link">📖 View Entries</a>
+    </div>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const diaryBox = document.getElementById("diaryEntry");
+    const status = document.getElementById("status");
+
+    function saveEntry() {
+      const text = diaryBox.value.trim();
+      if (text === "") {
+        status.textContent = "⚠ Please write something before saving!";
+        return;
+      }
+      const date = new Date().toLocaleString();
+      let entries = JSON.parse(localStorage.getItem("diaryEntries")) || [];
+      entries.push({ date: date, text: text });
+      localStorage.setItem("diaryEntries", JSON.stringify(entries));
+      diaryBox.value = "";
+      status.textContent = "✅ Entry saved!";
+    }
+
+    function clearEntry() {
+      diaryBox.value = "";
+      status.textContent = "📝 Cleared input (not saved).";
+    }
+
+  </script>
+
+
+</body>
+</html>
