@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Saved Diary</title>
+  <link rel="stylesheet" href="diary.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📖 My Diary Entries</h1>
+    <div id="entries"></div>
+    <div class="buttons">
+      <a href="diary.html" class="btn-link">✍ Back to Writing</a>
+      <button onclick="clearAll()">🗑 Delete All</button>
+    </div>
+  </div>
 
+  <script>
+    const entriesDiv = document.getElementById("entries");
+
+    function loadEntries() {
+      let entries = JSON.parse(localStorage.getItem("diaryEntries")) || [];
+      if (entries.length === 0) {
+        entriesDiv.innerHTML = "<p>No entries saved yet.</p>";
+        return;
+      }
+      entriesDiv.innerHTML = "";
+      entries.reverse().forEach((entry, index) => {
+        const box = document.createElement("div");
+        box.className = "entry";
+        box.innerHTML = `
+          <h3>${entry.date}</h3>
+          <p>${entry.text}</p>
+          <button class="delete-btn" onclick="deleteEntry(${entries.length - 1 - index})">❌ Delete</button>
+        `;
+        entriesDiv.appendChild(box);
+      });
+    }
+
+    function deleteEntry(index) {
+      let entries = JSON.parse(localStorage.getItem("diaryEntries")) || [];
+      entries.splice(index, 1); // remove the chosen entry
+      localStorage.setItem("diaryEntries", JSON.stringify(entries));
+      loadEntries();
+    }
+
+    function clearAll() {
+      if (confirm("Are you sure you want to delete all entries?")) {
+        localStorage.removeItem("diaryEntries");
+        loadEntries();
+      }
+    }
+
+    loadEntries();
+  </script>
+</body>
+</html>
